@@ -1,0 +1,27 @@
+def compute_reward(vehicle, lane_invasion, collision):
+    """
+    Computes reward for lane-following based on vehicle position and lane invasion.
+    """
+    # global lane_invasion_flag
+    reward = 0
+
+    # Strong penalty if the vehicle invades another lane
+    if lane_invasion:
+        print("Lane invasion detected! Applying penalty.")
+        reward -= 5  # Large penalty
+        # lane_invasion_flag = False  # Reset flag
+    
+    if collision:
+        reward -=20.0
+
+    # Small positive reward for staying in lane
+    else:
+        reward += 3.0
+
+    velocity = vehicle.get_velocity()
+    speed = (velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2) ** 0.5  # Compute speed in m/s
+
+    if speed > 2:  # If moving faster than 2 m/s
+        reward += speed * 0.5  # Higher speed, higher reward
+
+    return reward
